@@ -172,7 +172,7 @@ def main():
     pygame.init()
     # Создание экземпляров классов:
     snake = Snake()
-    apple = Apple()
+    apple = Apple(snake)
 
     while True:
         clock.tick(SPEED)
