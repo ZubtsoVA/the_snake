@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 import pygame
 
@@ -55,18 +55,28 @@ class GameObject:
 class Apple(GameObject):
     """Класс, описывающий яблоко и действия с ним."""
 
-    def __init__(self):
-        """Задаёт цвет яблока и устанавливает его начальную позицию."""
+    def __init__(self, snake):
+        """Задаёт цвет яблока и устанавливает его начальную позицию.
+
+        Args:
+            snake: экземпляр класса Snake, чтобы не ставить яблоко на тело.
+        """
         super().__init__()
         self.body_color = APPLE_COLOR
+        self.snake = snake
         self.randomize_position()
 
     def randomize_position(self):
-        """Устанавливает случайное положение яблока на игровом поле."""
-        self.position = (
-            randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-            randint(0, GRID_HEIGHT - 1) * GRID_SIZE,
-        )
+        """Устанавливает случайное положение яблока вне тела змейки."""
+        all_cells = {
+            (x * GRID_SIZE, y * GRID_SIZE)
+            for x in range(GRID_WIDTH)
+            for y in range(GRID_HEIGHT)
+        }
+        free_cells = all_cells - set(self.snake.positions)
+
+        if free_cells:
+            self.position = choice(tuple(free_cells))
 
     def draw(self):
         """Отрисовывает яблоко на игровой поверхности."""
